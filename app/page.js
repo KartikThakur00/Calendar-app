@@ -1,36 +1,25 @@
 "use client";
-// import Nav from "@/components/Nav";
 import TimezoneSelect from "react-timezone-select";
 import { useState } from "react";
+import DayTasks from "@/components/DayTasks";
+import Download from "@/components/Download";
 
 export default function Home() {
   const [timezone, setTimezone] = useState(
     Intl.DateTimeFormat().resolvedOptions().timeZone
   );
+
   const [currentDate, setCurrentDate] = useState(new Date());
 
-  const options = {
-    timezone: timezone,
-    year: "numeric",
+  const topDate = {
     month: "short",
     day: "numeric",
+    year: "numeric",
+    timeZone: timezone.value,
   };
 
-  function handleTimeZone(value) {
-    console.log(value);
-    setCurrentDate(
-      new Date(
-        currentDate.setDate(currentDate.getDate() + value * 60 * 60 * 1000)
-      )
-    );
-  }
-
-  console.log(currentDate.getUTCMinutes());
-  console.log(timezone.value);
-
   return (
-    <main className="p-5">
-
+    <main className="p-5 h-full">
       {/* navbar */}
       <nav className="flex justify-between">
         <div className="flex gap-14">
@@ -44,18 +33,7 @@ export default function Home() {
           >
             <span>&#129168;</span> Previous Week
           </button>
-          <p>
-            {currentDate.toLocaleDateString(
-              "en",
-              options
-            )}
-          </p>
-          <p>{currentDate.toLocaleDateString(
-              "en",{
-                timeZone:timezone,
-                hour: "numeric",
-              }
-            )}</p>
+          <p>{new Intl.DateTimeFormat("en-US", topDate).format(currentDate)}</p>
         </div>
 
         <button
@@ -80,7 +58,12 @@ export default function Home() {
           displayValue="UTC"
         />
       </div>
-      {/* <TimeZone currentDate={currentDate} setTimezone={handleTimeZone} /> */}
+
+      {/* checklist */}
+      <DayTasks currentDate={currentDate} />
+
+      {/* download button */}
+      <Download />
     </main>
   );
 }
